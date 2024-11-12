@@ -36,13 +36,8 @@ jobs:
 #      uses: helm/kind-action@v1.10.0
     - name: Run executable
       run: |
-        pwd
-        ls -la
-        cd bin/
-        echo "cd is completed"
         chmod +x ./TestAction
-        echo "chmod is completed"
-        bash TestAction
+        ./TestAction
         echo "bash is completed"
 #        kubectl cluster-info --context kind-chart-testing
 #        kubectl describe node
