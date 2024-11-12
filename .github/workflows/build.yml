@@ -38,6 +38,10 @@ jobs:
       run: |
         kubectl cluster-info --context kind-chart-testing
         kubectl describe node
+        echo "kubectl is completed"
         cd bin/
+        echo "cd is completed"
         chmod +x ./TestAction
+        echo "chmod is completed"
         bash TestAction
+        echo "bash is completed"
