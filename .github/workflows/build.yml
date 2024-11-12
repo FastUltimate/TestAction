@@ -32,16 +32,17 @@ jobs:
         cmake ../src
         cmake --build .
         make -j $(cat /proc/cpuinfo | grep processor | wc -l)
-    - name: Create k8s kind cluster
-      uses: helm/kind-action@v1.10.0
+#    - name: Create k8s kind cluster
+#      uses: helm/kind-action@v1.10.0
     - name: Run executable
       run: |
-        kubectl cluster-info --context kind-chart-testing
-        kubectl describe node
-        echo "kubectl is completed"
+        pwd
+        ls -la
         cd bin/
         echo "cd is completed"
         chmod +x ./TestAction
         echo "chmod is completed"
         bash TestAction
         echo "bash is completed"
+#        kubectl cluster-info --context kind-chart-testing
+#        kubectl describe node
