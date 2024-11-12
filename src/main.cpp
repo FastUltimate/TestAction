@@ -79,5 +79,7 @@ int main()
     const double * const px9 = &x9;
     case9(px9);
 
+    std::cout << "Execution Done!" << std::endl;
+
     return 0;
 }
