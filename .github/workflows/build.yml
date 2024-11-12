@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    types: [assigned, opened, synchronize, reopened]
+
+jobs:
+  build-executable:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Prepare
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libssl-dev libcurl4-openssl-dev libwebsockets-dev uncrustify valgrind
+    - name: Prepare libyaml
+      run: |
+        git clone https://github.com/yaml/libyaml --depth 1 --branch release/0.2.5
+        cd libyaml
+        mkdir build
+        cd build
+        cmake .. -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=ON
+        make -j $(cat /proc/cpuinfo | grep processor | wc -l)
+        sudo make install
+    - name: Build client library
+      run: |
+        mkdir build
+        cd build
+        cmake ../src
+        cmake --build .
+        make -j $(cat /proc/cpuinfo | grep processor | wc -l)
+    - name: Create k8s kind cluster
+      uses: helm/kind-action@v1.10.0
+    - name: Run executable
+      run: |
+        kubectl cluster-info --context kind-chart-testing
+        kubectl describe node
+        cd bin/
+        chmod +x ./TestAction
+        bash TestAction
